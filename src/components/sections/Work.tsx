@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { TECH, techIcon } from "@/lib/tech";
 
 type Project = {
   tag: string;
@@ -9,6 +10,7 @@ type Project = {
   accent: string;
   url?: string;
   soon?: boolean;
+  tech?: string[];
 };
 
 const PROJECTS: Project[] = [
@@ -18,6 +20,7 @@ const PROJECTS: Project[] = [
     desc: "Portal de propiedades con búsqueda y panel de administración.",
     accent: "#FF8A1E",
     url: "https://vetainmobiliaria.com",
+    // tech: [...]  // TODO: confirmar el stack real de Veta con Nico
   },
   {
     tag: "Periodístico",
@@ -25,6 +28,7 @@ const PROJECTS: Project[] = [
     desc: "Optimización y rediseño de un blog político en WordPress: UX/UI, SEO (Open Graph) y diseño responsive.",
     accent: "#5FA0DC",
     url: "https://airesdelibertadlp.com.ar",
+    tech: ["WordPress", "CSS"],
   },
   {
     tag: "Web app",
@@ -69,29 +73,114 @@ function Gear({ size, className }: { size: number; className: string }) {
   );
 }
 
-export default function Work() {
+function ProjectCard({ p, index }: { p: Project; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [done, setDone] = useState(false);
+  const [techOpen, setTechOpen] = useState(false);
 
   useEffect(() => {
-    const cards = Array.from(ref.current?.querySelectorAll<HTMLElement>(".card") ?? []);
+    const el = ref.current;
+    if (!el) return;
     const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((en) => {
-          if (en.isIntersecting) {
-            const c = en.target as HTMLElement;
-            const i = cards.indexOf(c);
-            c.style.transitionDelay = `${i * 0.14}s`;
-            c.classList.add("in");
-            setTimeout(() => (c.style.transitionDelay = ""), 1100 + i * 140);
-            io.unobserve(c);
-          }
-        }),
+      ([en]) => {
+        if (en.isIntersecting) {
+          setInView(true);
+          setTimeout(() => setDone(true), 1100 + index * 120);
+          io.unobserve(el);
+        }
+      },
       { threshold: 0.2 },
     );
-    cards.forEach((c) => io.observe(c));
+    io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [index]);
 
+  const hasUrl = !!p.url && p.url !== "#";
+  const domain = hasUrl ? domainOf(p.url!) : "tusitio.com";
+  const hasTech = !!p.tech && p.tech.length > 0;
+
+  return (
+    <div
+      ref={ref}
+      className={`card ${hasUrl ? "is-link" : "card-soon"} ${inView ? "in" : ""}`}
+      style={{ transitionDelay: done ? "0s" : `${index * 0.12}s` }}
+    >
+      <div className="card-media">
+        <div className="browser-bar">
+          <span className="b-dots">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="b-url">{domain}</span>
+        </div>
+        {hasUrl ? (
+          <div className="shot" style={{ backgroundImage: `url(${shotUrl(p.url!)})` }} />
+        ) : (
+          <div
+            className="shot empty"
+            style={{
+              background: `radial-gradient(120% 120% at 75% 12%, ${p.accent}45, transparent 58%), #15110d`,
+            }}
+          >
+            <div className="gears">
+              <Gear size={92} className="gear gear-a" />
+              <Gear size={60} className="gear gear-b" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="card-body">
+        <span className="card-tag2">{p.tag}</span>
+        <h3>{p.title}</h3>
+        <p>{p.desc}</p>
+
+        <div className="card-foot">
+          {hasUrl ? (
+            <a className="card-go" href={p.url} target="_blank" rel="noreferrer">
+              Ver sitio <i>↗</i>
+            </a>
+          ) : (
+            <span className="card-soon-label">Próximamente</span>
+          )}
+          {hasTech && (
+            <button
+              type="button"
+              className="tech-toggle"
+              onClick={() => setTechOpen((v) => !v)}
+              aria-expanded={techOpen}
+            >
+              Tecnologías <i>{techOpen ? "−" : "+"}</i>
+            </button>
+          )}
+        </div>
+
+        {hasTech && (
+          <div className={`card-tech ${techOpen ? "open" : ""}`}>
+            {p.tech!.map((t) => {
+              const tech = TECH[t];
+              return (
+                <span
+                  className="tech-chip"
+                  key={t}
+                  style={{ borderColor: `${tech.hex}59`, background: `${tech.hex}14` }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={techIcon(tech.slug, tech.hex)} alt="" width={14} height={14} />
+                  {t}
+                </span>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function Work() {
   return (
     <section className="work" id="trabajos">
       <h2>Trabajos seleccionados</h2>
@@ -99,66 +188,10 @@ export default function Work() {
         Una muestra del tipo de proyectos que construyo. Cada uno pensado de cero: diseño,
         performance y código mantenible.
       </p>
-      <div className="cards" ref={ref}>
-        {PROJECTS.map((p, i) => {
-          const hasUrl = !!p.url && p.url !== "#";
-          const domain = hasUrl ? domainOf(p.url!) : "tusitio.com";
-
-          const media = (
-            <div className="card-media">
-              <div className="browser-bar">
-                <span className="b-dots">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span className="b-url">{domain}</span>
-              </div>
-              {hasUrl ? (
-                <div className="shot" style={{ backgroundImage: `url(${shotUrl(p.url!)})` }} />
-              ) : (
-                <div
-                  className="shot empty"
-                  style={{
-                    background: `radial-gradient(120% 120% at 75% 12%, ${p.accent}45, transparent 58%), #15110d`,
-                  }}
-                >
-                  <div className="gears">
-                    <Gear size={92} className="gear gear-a" />
-                    <Gear size={60} className="gear gear-b" />
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-
-          const body = (
-            <div className="card-body">
-              <span className="card-tag2">{p.tag}</span>
-              <h3>{p.title}</h3>
-              <p>{p.desc}</p>
-              {hasUrl ? (
-                <span className="card-go">
-                  Ver sitio <i>↗</i>
-                </span>
-              ) : (
-                <span className="card-soon-label">Próximamente</span>
-              )}
-            </div>
-          );
-
-          return hasUrl ? (
-            <a className="card" key={i} href={p.url} target="_blank" rel="noreferrer">
-              {media}
-              {body}
-            </a>
-          ) : (
-            <div className="card card-soon" key={i}>
-              {media}
-              {body}
-            </div>
-          );
-        })}
+      <div className="cards">
+        {PROJECTS.map((p, i) => (
+          <ProjectCard key={i} p={p} index={i} />
+        ))}
       </div>
     </section>
   );

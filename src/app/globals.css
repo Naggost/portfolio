@@ -95,20 +95,20 @@ body{
 .work{position:relative;z-index:3;min-height:100vh;padding:22vh 8vw 18vh}
 .work h2{font-family:"Clash Display",sans-serif;font-weight:600;font-size:clamp(32px,5vw,64px);letter-spacing:-.02em;max-width:18ch}
 .work .lead{color:var(--muted);margin-top:18px;max-width:44ch;font-size:17px;line-height:1.6}
-.cards{margin-top:64px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.cards{margin-top:64px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;align-items:start}
 .card{position:relative;display:flex;flex-direction:column;border-radius:18px;overflow:hidden;text-decoration:none;color:var(--text);
   background:rgba(28,23,18,.55);border:1px solid rgba(255,255,255,.09);
   transform:translateY(48px) scale(.97);opacity:0;filter:blur(16px);
   transition:transform 1s cubic-bezier(.16,1,.3,1),opacity 1s,filter 1s,border-color .4s,box-shadow .4s}
 .card.in{transform:none;opacity:1;filter:blur(0)}
-a.card:hover{border-color:rgba(255,176,32,.55);box-shadow:0 24px 60px -28px rgba(0,0,0,.7)}
+.card.is-link:hover{border-color:rgba(255,176,32,.55);box-shadow:0 24px 60px -28px rgba(0,0,0,.7)}
 .card-media{position:relative;aspect-ratio:16/11;overflow:hidden;display:flex;flex-direction:column;background:#0e0c0a}
 .browser-bar{display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.045);border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
 .b-dots{display:flex;gap:6px}
 .b-dots i{width:9px;height:9px;border-radius:50%;background:rgba(242,240,235,.22)}
 .b-url{flex:1;min-width:0;font-size:11px;color:var(--muted);background:rgba(0,0,0,.28);border-radius:6px;padding:5px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .shot{position:relative;flex:1;background-size:cover;background-position:top center;background-color:#15110d;display:flex;align-items:center;justify-content:center;transition:transform .6s cubic-bezier(.16,1,.3,1)}
-a.card:hover .shot{transform:scale(1.05)}
+.card.is-link:hover .shot{transform:scale(1.05)}
 .shot.empty::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:28px 28px}
 .shot-initial{position:relative;z-index:1;font-family:"Clash Display",sans-serif;font-weight:600;font-size:60px;color:rgba(255,255,255,.1)}
 .gears{position:relative;z-index:1;display:flex;align-items:center;color:rgba(255,255,255,.16)}
@@ -121,10 +121,18 @@ a.card:hover .shot{transform:scale(1.05)}
 .card-tag2{align-self:flex-start;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(255,176,32,.4);border-radius:100px;padding:5px 11px;margin-bottom:14px}
 .card-body h3{font-family:"Clash Display",sans-serif;font-weight:500;font-size:26px}
 .card-body p{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.5;flex:1}
-.card-go{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:14px;margin-top:18px;font-weight:500}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px}
+.card-go{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:14px;font-weight:500;text-decoration:none}
 .card-go i{font-style:normal;transition:transform .3s cubic-bezier(.16,1,.3,1)}
-a.card:hover .card-go i{transform:translate(3px,-3px)}
-.card-soon-label{margin-top:18px;font-size:13px;letter-spacing:.04em;color:var(--muted)}
+.card.is-link:hover .card-go i{transform:translate(3px,-3px)}
+.card-soon-label{font-size:13px;letter-spacing:.04em;color:var(--muted)}
+.tech-toggle{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid rgba(255,255,255,.16);color:var(--muted);font-family:inherit;font-size:12.5px;border-radius:100px;padding:6px 12px;cursor:pointer;transition:border-color .3s,color .3s}
+.tech-toggle:hover{border-color:rgba(255,176,32,.5);color:var(--text)}
+.tech-toggle i{font-style:normal;font-size:15px;line-height:1;width:11px;text-align:center}
+.card-tech{display:flex;flex-wrap:wrap;gap:8px;max-height:0;opacity:0;overflow:hidden;transition:max-height .55s cubic-bezier(.16,1,.3,1),opacity .55s ease,margin-top .55s ease}
+.card-tech.open{max-height:140px;opacity:1;margin-top:14px}
+.tech-chip{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text);border:1px solid;border-radius:100px;padding:5px 11px}
+.tech-chip img{width:14px;height:14px;display:block}
 
 /* ---------- SERVICES ---------- */
 .services{position:relative;z-index:3;padding:14vh 8vw 16vh}
