@@ -196,10 +196,6 @@ a.card:hover .card-go i{transform:translate(3px,-3px)}
 .assure{margin-top:30px;display:flex;flex-direction:column;gap:13px}
 .assure li{display:flex;align-items:center;gap:12px;color:var(--text);font-size:15px;list-style:none}
 .assure .tick{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(255,176,32,.14);color:var(--gold);font-size:11px;flex-shrink:0}
-.wa-link{display:inline-flex;align-items:center;gap:10px;margin-top:28px;font-size:15px;color:var(--text);text-decoration:none;
-  border:1px solid rgba(37,211,102,.4);background:rgba(37,211,102,.08);border-radius:100px;padding:11px 18px;transition:background .3s,border-color .3s}
-.wa-link:hover{background:rgba(37,211,102,.16);border-color:rgba(37,211,102,.7)}
-.wa-link img{display:block}
 .form-card{position:relative;background:rgba(20,16,12,.55);border-radius:22px;padding:34px;overflow:hidden}
 .form-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
   background:conic-gradient(from var(--angle), rgba(255,255,255,.07) 0deg, var(--gold) 70deg, rgba(255,106,18,.55) 140deg, rgba(255,255,255,.07) 210deg, rgba(255,255,255,.07) 360deg);

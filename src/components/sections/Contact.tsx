@@ -105,11 +105,6 @@ export default function Contact() {
               <span className="tick">✓</span> Presupuesto claro desde el principio
             </li>
           </ul>
-          <a className="wa-link" href="https://wa.me/5492302567945" target="_blank" rel="noreferrer">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="" width={20} height={20} />
-            Escribime por WhatsApp
-          </a>
         </div>
 
         <div className="form-card" onPointerMove={spotlight}>
