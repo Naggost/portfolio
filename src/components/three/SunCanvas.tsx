@@ -70,6 +70,13 @@ void main(){
   // hot limb / corona glow
   float fres = pow(1.0 - max(dot(vNormal,vView),0.0), 2.4);
   col += mix(uHot, uFlare, fres) * fres * 1.3;
+  // light solar flares: smooth bright spots that wander and pulse over time
+  vec3 n = normalize(vPos);
+  vec3 fd1 = normalize(vec3(sin(uTime*0.31), cos(uTime*0.21), sin(uTime*0.27)));
+  vec3 fd2 = normalize(vec3(cos(uTime*0.19+2.0), sin(uTime*0.29+1.0), cos(uTime*0.23)));
+  float fl = pow(max(dot(n,fd1),0.0),34.0)*pow(max(sin(uTime*0.7),0.0),4.0)
+           + pow(max(dot(n,fd2),0.0),34.0)*pow(max(sin(uTime*0.55+1.6),0.0),4.0);
+  col += uFlare * fl * 1.7;
   gl_FragColor = vec4(col,1.0);
 }`;
 
@@ -126,9 +133,9 @@ function Sun({ scroll, pointer, narrow }: Refs) {
     uniforms.uMouse.value.copy(m.current);
     uniforms.uScroll.value = sLerp.current;
 
-    mesh.current.rotation.y = m.current.x * 0.4 + t * 0.04 + sLerp.current * Math.PI;
+    mesh.current.rotation.y = m.current.x * 0.4 + t * 0.06 + sLerp.current * Math.PI;
     mesh.current.rotation.x = -m.current.y * 0.3 + sLerp.current * 0.5;
-    pts.current.rotation.y = t * 0.02 + sLerp.current * 0.7;
+    pts.current.rotation.y = t * 0.032 + sLerp.current * 0.7;
     const nb = narrow.current ?? false;
     const CAP = 1.4; // matches the scroll clamp; at full scroll the sun is centered
     const baseX = nb ? 0.45 : 1.25;
@@ -161,7 +168,46 @@ function Sun({ scroll, pointer, narrow }: Refs) {
           depthWrite={false}
         />
       </points>
+      <pointLight position={[0, 0, 0]} intensity={9} distance={11} decay={1.6} color="#ffd9a0" />
+      <Planets />
     </group>
+  );
+}
+
+const PLANET_DATA = [
+  { r: 1.65, size: 0.05, speed: 0.6, color: "#9aa7c0", tilt: 0.1 },
+  { r: 2.0, size: 0.08, speed: 0.45, color: "#c0895a", tilt: -0.16 },
+  { r: 2.45, size: 0.06, speed: 0.33, color: "#7fa0b8", tilt: 0.2 },
+  { r: 2.95, size: 0.095, speed: 0.25, color: "#c2a06a", tilt: -0.1 },
+  { r: 3.4, size: 0.05, speed: 0.18, color: "#9a8fb0", tilt: 0.14 },
+];
+
+// Experimento: planetas orbitando el sol. Sutiles, para que el sol destaque.
+function Planets() {
+  const refs = useRef<(THREE.Group | null)[]>([]);
+  useFrame((s) => {
+    const t = s.clock.elapsedTime;
+    refs.current.forEach((g, i) => {
+      if (g) g.rotation.y = t * PLANET_DATA[i].speed + i * 1.3;
+    });
+  });
+  return (
+    <>
+      {PLANET_DATA.map((p, i) => (
+        <group
+          key={i}
+          ref={(el) => {
+            refs.current[i] = el;
+          }}
+          rotation={[p.tilt, 0, 0]}
+        >
+          <mesh position={[p.r, 0, 0]}>
+            <sphereGeometry args={[p.size, 16, 16]} />
+            <meshStandardMaterial color={p.color} roughness={0.9} metalness={0.05} />
+          </mesh>
+        </group>
+      ))}
+    </>
   );
 }
 
@@ -210,6 +256,7 @@ export default function SunCanvas() {
             setBloomOn(false);
           }}
         />
+        <ambientLight intensity={0.12} />
         <Stars radius={80} depth={40} count={1500} factor={3} saturation={0} fade speed={0.4} />
         <Sun scroll={scroll} pointer={pointer} narrow={narrow} />
         {bloomOn && !lowPower && (

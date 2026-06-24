@@ -79,8 +79,6 @@ export default function Background() {
         <span className="shooting s2" />
         <span className="shooting s3" />
         <span className="shooting s4" />
-        <span className="shooting s5" />
-        <span className="shooting s6" />
       </div>
       <div className="scrim-left" id="scrimL" />
       <div className="scrim-dark" id="scrimD" />

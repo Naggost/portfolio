@@ -60,13 +60,11 @@ body{
   filter:drop-shadow(0 0 6px rgba(180,210,255,.95))}
 .shooting::after{content:"";position:absolute;right:-2px;top:50%;width:5px;height:5px;border-radius:50%;transform:translateY(-50%);
   background:#fff;box-shadow:0 0 12px 3px rgba(200,225,255,.95)}
-.shooting.s1{top:10%;animation:shoot 7s ease-in 0s infinite}
-.shooting.s2{top:18%;animation:shoot 8s ease-in 1.5s infinite}
-.shooting.s3{top:5%;animation:shoot 6.5s ease-in 3s infinite}
-.shooting.s4{top:26%;animation:shoot 9s ease-in 4.5s infinite}
-.shooting.s5{top:14%;animation:shoot 7.5s ease-in 6s infinite}
-.shooting.s6{top:31%;animation:shoot 8.5s ease-in 2.2s infinite}
-@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(20deg)}4%{opacity:1}16%{opacity:1}20%{opacity:0;transform:translate(95vw,38vh) rotate(20deg)}100%{opacity:0;transform:translate(95vw,38vh) rotate(20deg)}}
+.shooting.s1{top:9%;animation:shoot 20s ease-in 0s infinite}
+.shooting.s2{top:21%;animation:shoot 20s ease-in 5s infinite}
+.shooting.s3{top:5%;animation:shoot 20s ease-in 10s infinite}
+.shooting.s4{top:27%;animation:shoot 20s ease-in 15s infinite}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(18deg)}2%{opacity:1}16%{opacity:1}20%{opacity:0;transform:translate(98vw,42vh) rotate(18deg)}100%{opacity:0;transform:translate(98vw,42vh) rotate(18deg)}}
 .vignette{position:fixed;inset:0;z-index:5;pointer-events:none;
   background:radial-gradient(120% 120% at 50% 45%,transparent 55%,rgba(0,0,0,.55) 100%)}
 
