@@ -169,7 +169,9 @@ export default function SunCanvas() {
   const narrow = useRef(false);
   const [lowPower, setLowPower] = useState(false);
   const [dpr, setDpr] = useState(1.5);
-  const [bloomOn, setBloomOn] = useState(true);
+  // Bloom postproceso desactivado: con la superficie realista en pantallas
+  // grandes generaba titileo. El brillo lo da el shader (corona) + el glow CSS.
+  const [bloomOn, setBloomOn] = useState(false);
 
   useEffect(() => {
     const onResize = () => {
