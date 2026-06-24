@@ -74,6 +74,12 @@ export default function Background() {
       <CanvasErrorBoundary fallback={<div className="sun-fallback" />}>
         <SunCanvas />
       </CanvasErrorBoundary>
+      <div className="cosmos" aria-hidden="true">
+        <span className="planet p1" />
+        <span className="shooting s1" />
+        <span className="shooting s2" />
+        <span className="shooting s3" />
+      </div>
       <div className="scrim-left" id="scrimL" />
       <div className="scrim-dark" id="scrimD" />
       <div className="vignette" />
