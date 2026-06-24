@@ -55,7 +55,7 @@ varying float vSurf; varying vec3 vNormal; varying vec3 vView; varying vec3 vPos
 void main(){
   // per-pixel granulation (STATIC — animating it makes the surface flicker) +
   // large-scale sunspot regions. The slow life comes from vSurf (vertex churn).
-  float gran = fbm(vPos*3.4);
+  float gran = fbm(vPos*5.5);
   float spots = fbm(vPos*1.7 + vec3(31.0));
   float base = vSurf*0.5 + gran*0.5;
   float s = smoothstep(-0.7,0.7,base);
@@ -68,8 +68,8 @@ void main(){
   // overall emission so it reads as a glowing sun (bloom is off)
   col *= 1.16;
   // hot limb / corona glow
-  float fres = pow(1.0 - max(dot(vNormal,vView),0.0), 2.0);
-  col += mix(uHot, uFlare, fres) * fres * 1.35;
+  float fres = pow(1.0 - max(dot(vNormal,vView),0.0), 2.4);
+  col += mix(uHot, uFlare, fres) * fres * 1.3;
   gl_FragColor = vec4(col,1.0);
 }`;
 
@@ -144,7 +144,7 @@ function Sun({ scroll, pointer, narrow }: Refs) {
     state.camera.lookAt(0, 0, 0);
   });
 
-  const detail = typeof window !== "undefined" && window.innerWidth < 768 ? 28 : 48;
+  const detail = typeof window !== "undefined" && window.innerWidth < 768 ? 32 : 64;
 
   return (
     <group ref={group} position={[1.25, 0, 0]}>
@@ -206,7 +206,7 @@ export default function SunCanvas() {
       <Canvas camera={{ position: [0, 0, 5.2], fov: 45 }} dpr={dpr} gl={{ alpha: true }}>
         <PerformanceMonitor
           onDecline={() => {
-            setDpr(1);
+            setDpr(1.25);
             setBloomOn(false);
           }}
         />
