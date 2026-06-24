@@ -20,11 +20,11 @@ const PROJECTS: Project[] = [
     url: "https://vetainmobiliaria.com",
   },
   {
-    tag: "E-commerce",
-    title: "En desarrollo",
-    desc: "Tienda online con pagos, carrito y gestión de stock.",
-    accent: "#FFC23D",
-    soon: true,
+    tag: "Periodístico",
+    title: "Aires de Libertad",
+    desc: "Optimización y rediseño de un blog político en WordPress: UX/UI, SEO (Open Graph) y diseño responsive.",
+    accent: "#5FA0DC",
+    url: "https://airesdelibertadlp.com.ar",
   },
   {
     tag: "Web app",
