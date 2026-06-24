@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nico — Hero prototype (sun)</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0C;
+    --text:#F2F0EB;
+    --gold:#FFB020;
+    --sun:#FF8A1E;
+    --muted:rgba(242,240,235,.58);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:"Satoshi",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+
+  #app{position:fixed;inset:0;z-index:1}
+  canvas{display:block}
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(40% 50% at 74% 42%, rgba(255,138,30,.16), transparent 70%),
+      radial-gradient(46% 56% at 82% 60%, rgba(255,80,0,.12), transparent 72%);}
+  /* fixed, scroll-driven scrims — no per-section backgrounds, so no hard seam */
+  .scrim-left{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:1;
+    background:linear-gradient(90deg, rgba(10,10,12,.94) 0%, rgba(10,10,12,.7) 32%, rgba(10,10,12,.2) 50%, transparent 62%)}
+  .scrim-dark{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;background:#0A0A0C}
+  .grain{position:fixed;inset:-50%;z-index:6;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain 0.6s steps(3) infinite;mix-blend-mode:overlay}
+  .vignette{position:fixed;inset:0;z-index:5;pointer-events:none;
+    background:radial-gradient(120% 120% at 50% 45%,transparent 55%,rgba(0,0,0,.55) 100%)}
+
+  .hero{position:relative;z-index:3;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 8vw;pointer-events:none}
+  .eyebrow{font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:28px;opacity:0;animation:fade 1s ease 1.6s forwards}
+  .eyebrow .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:12px;vertical-align:middle;box-shadow:0 0 14px var(--gold)}
+  h1{font-family:"Clash Display",sans-serif;font-weight:600;font-size:clamp(52px,10vw,150px);line-height:.96;letter-spacing:-.03em;max-width:15ch}
+  h1 .line{display:block;overflow:hidden}
+  h1 .line > span{display:inline-block;transform:translateY(108%);will-change:transform}
+  .accent{font-style:normal;color:var(--gold)}
+  .caret{display:inline-block;width:3px;height:.92em;background:var(--gold);margin-left:6px;vertical-align:-.08em;animation:blink 1s steps(1) infinite}
+  .reveal-1>span{animation:rise 1.1s cubic-bezier(.16,1,.3,1) .25s forwards}
+  .reveal-2>span{animation:rise 1.1s cubic-bezier(.16,1,.3,1) .40s forwards}
+  .reveal-3>span{animation:rise 1.1s cubic-bezier(.16,1,.3,1) .55s forwards}
+  .sub{margin-top:34px;max-width:46ch;font-size:clamp(15px,1.5vw,19px);line-height:1.6;color:var(--muted);opacity:0;animation:fade 1.1s ease 1.2s forwards}
+  .cta{margin-top:48px;display:flex;gap:18px;flex-wrap:wrap;pointer-events:auto;opacity:0;animation:fade 1.1s ease 1.45s forwards}
+  .btn{position:relative;display:inline-flex;align-items:center;gap:10px;overflow:hidden;
+    font-family:"Clash Display",sans-serif;font-weight:500;font-size:15px;letter-spacing:.015em;
+    padding:15px 26px;border-radius:14px;cursor:pointer;border:1px solid transparent;
+    transition:box-shadow .35s,color .35s,border-color .35s;will-change:transform}
+  .btn .label,.btn .arrow{position:relative;z-index:1}
+  .btn .arrow{font-size:17px;line-height:1;transition:transform .35s cubic-bezier(.16,1,.3,1)}
+  .btn:hover .arrow{transform:translateX(5px)}
+  .btn-primary{background:var(--gold);color:#0A0A0C}
+  .btn-primary:hover{box-shadow:0 12px 34px -10px rgba(255,176,32,.65)}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(242,240,235,.22)}
+  .btn-ghost::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateY(101%);transition:transform .42s cubic-bezier(.16,1,.3,1);z-index:0}
+  .btn-ghost:hover{color:#0A0A0C;border-color:var(--gold)}
+  .btn-ghost:hover::before{transform:translateY(0)}
+  .scrollcue{position:absolute;left:8vw;bottom:36px;display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.06em;color:var(--muted);opacity:0;animation:fade 1s ease 1.9s forwards}
+  .scrollcue .bar{width:1px;height:34px;background:linear-gradient(var(--muted),transparent);animation:drop 2s ease-in-out infinite}
+
+  .work{position:relative;z-index:3;min-height:100vh;padding:22vh 8vw 18vh}
+  .work h2{font-family:"Clash Display",sans-serif;font-weight:600;font-size:clamp(32px,5vw,64px);letter-spacing:-.02em;max-width:18ch}
+  .work .lead{color:var(--muted);margin-top:18px;max-width:44ch;font-size:17px;line-height:1.6}
+  .cards{margin-top:64px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+  .card{position:relative;padding:26px;border-radius:18px;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(8px);overflow:hidden;
+    transform:translateY(48px) scale(.97);opacity:0;filter:blur(16px);
+    transition:transform 1s cubic-bezier(.16,1,.3,1),opacity 1s,filter 1s,border-color .4s}
+  .card.in{transform:none;opacity:1;filter:blur(0)}
+  .card:hover{border-color:rgba(255,176,32,.5)}
+  .card .glow{position:absolute;inset:auto -40% -50% auto;width:70%;height:70%;border-radius:50%;filter:blur(40px);opacity:.5;transition:opacity .5s}
+  .card:nth-child(1) .glow{background:var(--sun)}
+  .card:nth-child(2) .glow{background:#FFC23D}
+  .card:nth-child(3) .glow{background:var(--gold)}
+  .card:hover .glow{opacity:.85}
+  .card .tag{align-self:flex-start;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(255,176,32,.4);border-radius:100px;padding:6px 12px;position:relative;z-index:2}
+  .card h3{font-family:"Clash Display",sans-serif;font-weight:500;font-size:28px;margin-top:18px;position:relative;z-index:2}
+  .card p{color:var(--muted);font-size:14px;margin-top:8px;position:relative;z-index:2}
+
+  @keyframes rise{to{transform:translateY(0)}}
+  @keyframes fade{to{opacity:1}}
+  @keyframes blink{50%{opacity:0}}
+  @keyframes drop{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(8px);opacity:1}}
+  @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-5%,3%)}50%{transform:translate(4%,-4%)}75%{transform:translate(-3%,5%)}100%{transform:translate(5%,-2%)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}h1 .line>span{transform:none}.eyebrow,.sub,.cta,.scrollcue{opacity:1}.card{transform:none;opacity:1;filter:none}.caret{display:none}}
+</style>
+</head>
+<body>
+  <div class="ambient"></div>
+  <div id="app"></div>
+  <div class="scrim-left" id="scrimL"></div>
+  <div class="scrim-dark" id="scrimD"></div>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span>Desarrollo web · Portfolio</div>
+    <h1>
+      <span class="line reveal-1"><span>Construyo webs</span></span>
+      <span class="line reveal-2"><span><span class="accent" id="tw"></span><span class="caret"></span></span></span>
+      <span class="line reveal-3"><span>by Nico.</span></span>
+    </h1>
+    <p class="sub">Diseño y desarrollo de webs premium — rápidas, seguras y con ese detalle que hace que un cliente diga "esto está increíble".</p>
+    <div class="cta">
+      <button class="btn btn-primary magnetic"><span class="label">Ver proyectos</span><span class="arrow">→</span></button>
+      <button class="btn btn-ghost magnetic"><span class="label">Trabajemos juntos</span><span class="arrow">→</span></button>
+    </div>
+    <div class="scrollcue">scroll <span class="bar"></span></div>
+  </section>
+
+  <section class="work">
+    <h2>Trabajos seleccionados</h2>
+    <p class="lead">Una muestra del tipo de proyectos que construyo. Cada uno pensado de cero: diseño, performance y código mantenible.</p>
+    <div class="cards">
+      <article class="card"><span class="glow"></span><span class="tag">Inmobiliaria</span><h3>Veta Inmobiliaria</h3><p>Portal de propiedades con búsqueda y panel de administración.</p></article>
+      <article class="card"><span class="glow"></span><span class="tag">E-commerce</span><h3>Próximamente</h3><p>Tienda online con pagos, carrito y gestión de stock.</p></article>
+      <article class="card"><span class="glow"></span><span class="tag">Web app</span><h3>Próximamente</h3><p>Aplicación a medida con autenticación y dashboard en tiempo real.</p></article>
+    </div>
+  </section>
+
+<script type="importmap">
+{ "imports":{ "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const app = document.getElementById('app');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
+camera.position.set(0,0,5.2);
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+app.appendChild(renderer.domElement);
+
+const C_DARK=new THREE.Color('#4A0E00'), C_MID=new THREE.Color('#FF5A00'),
+      C_HOT=new THREE.Color('#FFB020'), C_FLARE=new THREE.Color('#FFF1C2'),
+      C_LIME=new THREE.Color('#FFE08A');
+
+const NOISE = `
+vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){
+  const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);
+  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
+  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
+  i=mod(i,289.0);
+  vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+  float n_=1.0/7.0;vec3 ns=n_*D.wyz-D.xzx;
+  vec4 j=p-49.0*floor(p*ns.z*ns.z);
+  vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
+  vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);
+  vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;
+  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}
+float fbm(vec3 p){float a=0.5,s=0.0;for(int i=0;i<5;i++){s+=a*snoise(p);p*=2.02;a*=0.5;}return s;}`;
+
+const uniforms={uTime:{value:0},uMouse:{value:new THREE.Vector2()},uScroll:{value:0},
+  uDark:{value:C_DARK},uMid:{value:C_MID},uHot:{value:C_HOT},uFlare:{value:C_FLARE},uLime:{value:C_LIME}};
+
+const sunMat=new THREE.ShaderMaterial({uniforms,
+  vertexShader:`${NOISE}
+    uniform float uTime; uniform vec2 uMouse; uniform float uScroll;
+    varying float vSurf; varying vec3 vNormal; varying vec3 vView;
+    void main(){
+      vec3 p=position;
+      float surf=fbm(p*2.1 + vec3(0.0,0.0,uTime*0.10));
+      vSurf=surf;
+      float m=(uMouse.x*0.5+uMouse.y*0.4);
+      float disp=surf*0.10 + m*0.04 + uScroll*0.10;   // churning surface, stays spherical
+      vec3 np=p+normal*disp;
+      vec4 mv=modelViewMatrix*vec4(np,1.0);
+      vNormal=normalize(normalMatrix*normal);
+      vView=normalize(-mv.xyz);
+      gl_Position=projectionMatrix*mv;
+    }`,
+  fragmentShader:`
+    uniform vec3 uDark,uMid,uHot,uFlare,uLime;
+    varying float vSurf; varying vec3 vNormal; varying vec3 vView;
+    void main(){
+      float s=smoothstep(-0.7,0.85,vSurf);
+      vec3 col=mix(uDark,uMid,smoothstep(0.0,0.5,s));
+      col=mix(col,uHot,smoothstep(0.42,0.82,s));
+      col=mix(col,uFlare,smoothstep(0.78,1.0,s));        // hot flares
+      float fres=pow(1.0-max(dot(vNormal,vView),0.0),2.0);
+      vec3 corona=mix(uHot,uLime,fres);                  // corona edge bends toward lime
+      col+=corona*fres*0.9;
+      gl_FragColor=vec4(col,1.0);
+    }`});
+
+const sun=new THREE.Mesh(new THREE.IcosahedronGeometry(1.25,128), sunMat);
+sun.scale.setScalar(1.0);
+const orb=new THREE.Group(); orb.add(sun); orb.position.x=1.25; scene.add(orb);
+
+// embers
+const COUNT=1200; const pos=new Float32Array(COUNT*3);
+for(let i=0;i<COUNT;i++){const r=1.9+Math.random()*2.8,th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1);
+  pos[i*3]=r*Math.sin(ph)*Math.cos(th);pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);pos[i*3+2]=r*Math.cos(ph);}
+const pgeo=new THREE.BufferGeometry(); pgeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+const particles=new THREE.Points(pgeo,new THREE.PointsMaterial({size:0.016,color:0xFFB060,transparent:true,opacity:0.5,depthWrite:false}));
+orb.add(particles);
+
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),0.6,0.7,0.3));
+
+const mouse=new THREE.Vector2(),target=new THREE.Vector2();
+addEventListener('pointermove',e=>{target.x=(e.clientX/innerWidth)*2-1;target.y=-((e.clientY/innerHeight)*2-1);});
+document.querySelectorAll('.magnetic').forEach(b=>{
+  b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-(r.left+r.width/2))*0.3}px,${(e.clientY-(r.top+r.height/2))*0.4}px)`;});
+  b.addEventListener('pointerleave',()=>b.style.transform='');
+});
+
+const scrimL=document.getElementById('scrimL'), scrimD=document.getElementById('scrimD');
+let scrollN=0; const onScroll=()=>scrollN=Math.min(scrollY/innerHeight,1.4);
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+const io=new IntersectionObserver(es=>es.forEach(en=>{
+  if(en.isIntersecting){
+    const c=en.target, i=[...c.parentNode.children].indexOf(c);
+    c.style.transitionDelay=(i*0.14)+'s';
+    c.classList.add('in');
+    setTimeout(()=>c.style.transitionDelay='', 1100+i*140); // clear so hover stays snappy
+    io.unobserve(c);
+  }
+}),{threshold:.2});
+document.querySelectorAll('.card').forEach(c=>io.observe(c));
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);});
+
+const clock=new THREE.Clock(); let sLerp=0;
+function tick(){
+  const t=clock.getElapsedTime();
+  mouse.lerp(target,0.05); sLerp+=(scrollN-sLerp)*0.06;
+  uniforms.uTime.value=reduce?0:t; uniforms.uMouse.value.set(mouse.x,mouse.y); uniforms.uScroll.value=sLerp;
+  scrimL.style.opacity=Math.max(0,1-sLerp*1.25);     // hero readability fades as you scroll
+  scrimD.style.opacity=Math.min(0.82,sLerp*0.9);     // whole screen darkens for the cards
+  sun.rotation.y=mouse.x*0.4+(reduce?0:t*0.04)+sLerp*Math.PI*1.0;
+  sun.rotation.x=-mouse.y*0.3+sLerp*0.5;
+  particles.rotation.y=(reduce?0:t*0.02)+sLerp*0.7;
+  orb.position.x=1.25-sLerp*1.4; orb.position.y=-sLerp*0.3; orb.scale.setScalar(1+sLerp*0.3);
+  camera.position.x+=(mouse.x*0.2-camera.position.x)*0.05; camera.position.y+=(mouse.y*0.15-camera.position.y)*0.05;
+  camera.lookAt(0,0,0); composer.render(); requestAnimationFrame(tick);
+}
+tick();
+
+// ---- typewriter (on load) ----
+const tw=document.getElementById('tw');
+const words=['a medida.','que convierten.','memorables.','rápidas y seguras.'];
+let wi=0,ci=0,deleting=false;
+function type(){
+  const w=words[wi];
+  if(!deleting){ci++;tw.textContent=w.slice(0,ci);if(ci===w.length){deleting=true;return setTimeout(type,1500);}}
+  else{ci--;tw.textContent=w.slice(0,ci);if(ci===0){deleting=false;wi=(wi+1)%words.length;return setTimeout(type,300);}}
+  setTimeout(type,deleting?40:85);
+}
+if(reduce){tw.textContent=words[0];}else{setTimeout(type,1600);}
+</script>
+</body>
+</html>
