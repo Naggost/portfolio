@@ -53,10 +53,11 @@ uniform float uTime;
 uniform vec3 uDark,uMid,uHot,uFlare,uLime;
 varying float vSurf; varying vec3 vNormal; varying vec3 vView; varying vec3 vPos;
 void main(){
-  // per-pixel granulation + large-scale sunspot regions
-  float gran = fbm(vPos*5.5 + vec3(0.0,0.0,uTime*0.12));
+  // per-pixel granulation (STATIC — animating it makes the surface flicker) +
+  // large-scale sunspot regions. The slow life comes from vSurf (vertex churn).
+  float gran = fbm(vPos*3.4);
   float spots = fbm(vPos*1.7 + vec3(31.0));
-  float base = vSurf*0.45 + gran*0.55;
+  float base = vSurf*0.5 + gran*0.5;
   float s = smoothstep(-0.6,0.85,base);
   vec3 col = mix(uDark, uMid, smoothstep(0.0,0.5,s));
   col = mix(col, uHot, smoothstep(0.45,0.82,s));
@@ -210,9 +211,9 @@ export default function SunCanvas() {
         {bloomOn && !lowPower && (
           <EffectComposer>
             <Bloom
-              intensity={0.72}
-              luminanceThreshold={0.3}
-              luminanceSmoothing={0.7}
+              intensity={0.55}
+              luminanceThreshold={0.42}
+              luminanceSmoothing={0.8}
               radius={0.7}
               mipmapBlur
             />
