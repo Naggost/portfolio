@@ -75,10 +75,12 @@ export default function Background() {
         <SunCanvas />
       </CanvasErrorBoundary>
       <div className="cosmos" aria-hidden="true">
-        <span className="planet p1" />
         <span className="shooting s1" />
         <span className="shooting s2" />
         <span className="shooting s3" />
+        <span className="shooting s4" />
+        <span className="shooting s5" />
+        <span className="shooting s6" />
       </div>
       <div className="scrim-left" id="scrimL" />
       <div className="scrim-dark" id="scrimD" />

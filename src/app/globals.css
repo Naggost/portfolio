@@ -55,16 +55,18 @@ body{
   mix-blend-mode:overlay}
 /* cosmos: planetas tenues + estrellas fugaces (CSS, no toca el WebGL) */
 .cosmos{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
-.planet{position:absolute;border-radius:50%;filter:blur(1.5px)}
-.planet.p1{width:56px;height:56px;top:9%;right:9%;opacity:.16;
-  background:radial-gradient(circle at 36% 34%, #8fa3c6 0%, #3c4768 55%, #1b2236 82%, transparent 100%)}
-.shooting{position:absolute;left:-15%;width:140px;height:2px;border-radius:2px;opacity:0;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95));
-  filter:drop-shadow(0 0 5px rgba(180,210,255,.7))}
-.shooting.s1{top:13%;animation:shoot 11s ease-in 2s infinite}
-.shooting.s2{top:6%;animation:shoot 15s ease-in 8s infinite}
-.shooting.s3{top:23%;animation:shoot 19s ease-in 14s infinite}
-@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(20deg)}3%{opacity:1}11%{opacity:.9}15%{opacity:0;transform:translate(82vw,30vh) rotate(20deg)}100%{opacity:0;transform:translate(82vw,30vh) rotate(20deg)}}
+.shooting{position:absolute;left:-15%;width:210px;height:2px;border-radius:2px;opacity:0;
+  background:linear-gradient(90deg, transparent, rgba(190,215,255,.5) 60%, #fff);
+  filter:drop-shadow(0 0 6px rgba(180,210,255,.95))}
+.shooting::after{content:"";position:absolute;right:-2px;top:50%;width:5px;height:5px;border-radius:50%;transform:translateY(-50%);
+  background:#fff;box-shadow:0 0 12px 3px rgba(200,225,255,.95)}
+.shooting.s1{top:10%;animation:shoot 7s ease-in 0s infinite}
+.shooting.s2{top:18%;animation:shoot 8s ease-in 1.5s infinite}
+.shooting.s3{top:5%;animation:shoot 6.5s ease-in 3s infinite}
+.shooting.s4{top:26%;animation:shoot 9s ease-in 4.5s infinite}
+.shooting.s5{top:14%;animation:shoot 7.5s ease-in 6s infinite}
+.shooting.s6{top:31%;animation:shoot 8.5s ease-in 2.2s infinite}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(20deg)}4%{opacity:1}16%{opacity:1}20%{opacity:0;transform:translate(95vw,38vh) rotate(20deg)}100%{opacity:0;transform:translate(95vw,38vh) rotate(20deg)}}
 .vignette{position:fixed;inset:0;z-index:5;pointer-events:none;
   background:radial-gradient(120% 120% at 50% 45%,transparent 55%,rgba(0,0,0,.55) 100%)}
 
