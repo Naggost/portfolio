@@ -43,8 +43,8 @@ body{
 .scene canvas{display:block}
 .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(40% 50% at 74% 42%, rgba(255,138,30,.16), transparent 70%),
-    radial-gradient(46% 56% at 82% 60%, rgba(255,80,0,.12), transparent 72%);}
+    radial-gradient(42% 52% at 75% 44%, rgba(255,150,40,.26), transparent 70%),
+    radial-gradient(48% 58% at 82% 60%, rgba(255,90,0,.16), transparent 72%);}
 .sun-fallback{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(42% 48% at 76% 42%, #FFC76A, #FF6A12 44%, transparent 72%)}
 .scrim-left{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:1;

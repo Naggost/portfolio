@@ -58,16 +58,18 @@ void main(){
   float gran = fbm(vPos*3.4);
   float spots = fbm(vPos*1.7 + vec3(31.0));
   float base = vSurf*0.5 + gran*0.5;
-  float s = smoothstep(-0.6,0.85,base);
-  vec3 col = mix(uDark, uMid, smoothstep(0.0,0.5,s));
-  col = mix(col, uHot, smoothstep(0.45,0.82,s));
-  col = mix(col, uFlare, smoothstep(0.82,1.0,s));
-  // sunspots: subtle dark patches
-  float spotMask = smoothstep(0.18,0.42, spots);
-  col *= mix(0.45, 1.0, spotMask);
-  // corona / limb glow
-  float fres = pow(1.0 - max(dot(vNormal,vView),0.0), 2.2);
-  col += mix(uHot, uFlare, fres) * fres * 1.05;
+  float s = smoothstep(-0.7,0.7,base);
+  // bright surface: orange -> gold -> white-hot
+  vec3 col = mix(uMid, uHot, smoothstep(0.0,0.62,s));
+  col = mix(col, uFlare, smoothstep(0.62,1.0,s));
+  // dark sunspots only in the deepest, rarest noise dips
+  float spot = smoothstep(-0.55,-0.18, spots);
+  col = mix(uDark, col, spot);
+  // overall emission so it reads as a glowing sun (bloom is off)
+  col *= 1.16;
+  // hot limb / corona glow
+  float fres = pow(1.0 - max(dot(vNormal,vView),0.0), 2.0);
+  col += mix(uHot, uFlare, fres) * fres * 1.35;
   gl_FragColor = vec4(col,1.0);
 }`;
 
