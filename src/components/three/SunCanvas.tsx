@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { PerformanceMonitor } from "@react-three/drei";
+import { PerformanceMonitor, Stars } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import * as THREE from "three";
 
@@ -33,13 +33,14 @@ float fbm(vec3 p){float a=0.5,s=0.0;for(int i=0;i<3;i++){s+=a*snoise(p);p*=2.02;
 
 const VERT = NOISE + /* glsl */ `
 uniform float uTime; uniform vec2 uMouse; uniform float uScroll;
-varying float vSurf; varying vec3 vNormal; varying vec3 vView;
+varying float vSurf; varying vec3 vNormal; varying vec3 vView; varying vec3 vPos;
 void main(){
   vec3 p=position;
+  vPos=p;
   float surf=fbm(p*2.1 + vec3(0.0,0.0,uTime*0.10));
   vSurf=surf;
   float m=(uMouse.x*0.5+uMouse.y*0.4);
-  float disp=surf*0.10 + m*0.04 + uScroll*0.10;
+  float disp=surf*0.07 + m*0.03 + uScroll*0.09;
   vec3 np=p+normal*disp;
   vec4 mv=modelViewMatrix*vec4(np,1.0);
   vNormal=normalize(normalMatrix*normal);
@@ -47,18 +48,26 @@ void main(){
   gl_Position=projectionMatrix*mv;
 }`;
 
-const FRAG = /* glsl */ `
+const FRAG = NOISE + /* glsl */ `
+uniform float uTime;
 uniform vec3 uDark,uMid,uHot,uFlare,uLime;
-varying float vSurf; varying vec3 vNormal; varying vec3 vView;
+varying float vSurf; varying vec3 vNormal; varying vec3 vView; varying vec3 vPos;
 void main(){
-  float s=smoothstep(-0.7,0.85,vSurf);
-  vec3 col=mix(uDark,uMid,smoothstep(0.0,0.5,s));
-  col=mix(col,uHot,smoothstep(0.42,0.82,s));
-  col=mix(col,uFlare,smoothstep(0.78,1.0,s));
-  float fres=pow(1.0-max(dot(vNormal,vView),0.0),2.0);
-  vec3 corona=mix(uHot,uLime,fres);
-  col+=corona*fres*0.9;
-  gl_FragColor=vec4(col,1.0);
+  // per-pixel granulation + large-scale sunspot regions
+  float gran = fbm(vPos*5.5 + vec3(0.0,0.0,uTime*0.12));
+  float spots = fbm(vPos*1.7 + vec3(31.0));
+  float base = vSurf*0.45 + gran*0.55;
+  float s = smoothstep(-0.6,0.85,base);
+  vec3 col = mix(uDark, uMid, smoothstep(0.0,0.5,s));
+  col = mix(col, uHot, smoothstep(0.45,0.82,s));
+  col = mix(col, uFlare, smoothstep(0.82,1.0,s));
+  // sunspots: subtle dark patches
+  float spotMask = smoothstep(0.18,0.42, spots);
+  col *= mix(0.45, 1.0, spotMask);
+  // corona / limb glow
+  float fres = pow(1.0 - max(dot(vNormal,vView),0.0), 2.2);
+  col += mix(uHot, uFlare, fres) * fres * 1.05;
+  gl_FragColor = vec4(col,1.0);
 }`;
 
 type Refs = {
@@ -196,11 +205,12 @@ export default function SunCanvas() {
             setBloomOn(false);
           }}
         />
+        <Stars radius={80} depth={40} count={1500} factor={3} saturation={0} fade speed={0.4} />
         <Sun scroll={scroll} pointer={pointer} narrow={narrow} />
         {bloomOn && !lowPower && (
           <EffectComposer>
             <Bloom
-              intensity={0.6}
+              intensity={0.72}
               luminanceThreshold={0.3}
               luminanceSmoothing={0.7}
               radius={0.7}
