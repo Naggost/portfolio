@@ -20,7 +20,7 @@ const PROJECTS: Project[] = [
     desc: "Portal de propiedades con búsqueda y panel de administración.",
     accent: "#FF8A1E",
     url: "https://vetainmobiliaria.com",
-    // tech: [...]  // TODO: confirmar el stack real de Veta con Nico
+    tech: ["Next.js", "Tailwind", "TypeScript"], // TODO: confirmar stack real de Veta
   },
   {
     tag: "Periodístico",
@@ -36,6 +36,7 @@ const PROJECTS: Project[] = [
     desc: "Aplicación a medida con autenticación y dashboard en tiempo real.",
     accent: "#FFB020",
     soon: true,
+    tech: ["Next.js", "PostgreSQL", "TypeScript"],
   },
 ];
 
@@ -107,29 +108,34 @@ function ProjectCard({ p, index }: { p: Project; index: number }) {
       style={{ transitionDelay: done ? "0s" : `${index * 0.12}s` }}
     >
       <div className="card-media">
-        <div className="browser-bar">
-          <span className="b-dots">
-            <i />
-            <i />
-            <i />
-          </span>
-          <span className="b-url">{domain}</span>
-        </div>
-        {hasUrl ? (
-          <div className="shot" style={{ backgroundImage: `url(${shotUrl(p.url!)})` }} />
-        ) : (
-          <div
-            className="shot empty"
-            style={{
-              background: `radial-gradient(120% 120% at 75% 12%, ${p.accent}45, transparent 58%), #15110d`,
-            }}
-          >
-            <div className="gears">
-              <Gear size={92} className="gear gear-a" />
-              <Gear size={60} className="gear gear-b" />
+        <div className="laptop">
+          <div className="laptop-screen">
+            <div className="browser-bar">
+              <span className="b-dots">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span className="b-url">{domain}</span>
             </div>
+            {hasUrl ? (
+              <div className="shot" style={{ backgroundImage: `url(${shotUrl(p.url!)})` }} />
+            ) : (
+              <div
+                className="shot empty"
+                style={{
+                  background: `radial-gradient(120% 120% at 75% 12%, ${p.accent}45, transparent 58%), #15110d`,
+                }}
+              >
+                <div className="gears">
+                  <Gear size={78} className="gear gear-a" />
+                  <Gear size={52} className="gear gear-b" />
+                </div>
+              </div>
+            )}
           </div>
-        )}
+          <div className="laptop-base" />
+        </div>
       </div>
 
       <div className="card-body">
