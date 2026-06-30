@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // React/Turbopack need eval() in dev only; production stays strict (no unsafe-eval).
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://cdn.fontshare.com",
   "font-src 'self' data: https://api.fontshare.com https://cdn.fontshare.com",
   "img-src 'self' data: https://cdn.simpleicons.org https://s.wp.com",

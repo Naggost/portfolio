@@ -8,6 +8,7 @@ import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import ScrollTop from "@/components/ScrollTop";
 import Preloader from "@/components/Preloader";
+import Cursor from "@/components/Cursor";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       </main>
       <Footer />
       <ScrollTop />
+      <Cursor />
     </>
   );
 }

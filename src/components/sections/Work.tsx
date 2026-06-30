@@ -133,6 +133,7 @@ function ProjectCard({ p, index }: { p: Project; index: number }) {
                 </div>
               </div>
             )}
+            <div className="screen-chin">MacBook Pro</div>
           </div>
           <div className="laptop-base" />
         </div>
