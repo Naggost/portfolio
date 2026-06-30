@@ -20,7 +20,7 @@ const PROJECTS: Project[] = [
     desc: "Portal de propiedades con búsqueda y panel de administración.",
     accent: "#FF8A1E",
     url: "https://vetainmobiliaria.com",
-    tech: ["Next.js", "Tailwind", "TypeScript"], // TODO: confirmar stack real de Veta
+    tech: ["Next.js", "React", "TypeScript", "Tailwind", "Prisma", "PostgreSQL"],
   },
   {
     tag: "Periodístico",

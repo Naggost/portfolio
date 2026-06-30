@@ -8,6 +8,7 @@ export const TECH: Record<string, { slug: string; hex: string }> = {
   Motion: { slug: "framer", hex: "#FFFFFF" },
   Stripe: { slug: "stripe", hex: "#8B7CFF" },
   PostgreSQL: { slug: "postgresql", hex: "#6CA0DC" },
+  Prisma: { slug: "prisma", hex: "#A9B4D0" },
   "Node.js": { slug: "nodedotjs", hex: "#66BB6A" },
   Vercel: { slug: "vercel", hex: "#FFFFFF" },
   WordPress: { slug: "wordpress", hex: "#6AA9DC" },
