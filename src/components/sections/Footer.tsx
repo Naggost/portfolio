@@ -1,10 +1,6 @@
-const SECTIONS = [
-  { label: "Trabajos", href: "#trabajos" },
-  { label: "Servicios", href: "#servicios" },
-  { label: "Proceso", href: "#proceso" },
-  { label: "Sobre mí", href: "#sobre-mi" },
-  { label: "Contacto", href: "#contacto" },
-];
+"use client";
+
+import { useLanguage } from "@/lib/i18n";
 
 const SOCIAL = [
   { label: "WhatsApp", href: "https://wa.me/5492302567945" },
@@ -14,12 +10,21 @@ const SOCIAL = [
 ];
 
 export default function Footer() {
+  const { t } = useLanguage();
+  const sections = [
+    { label: t.nav.trabajos, href: "#trabajos" },
+    { label: t.nav.servicios, href: "#servicios" },
+    { label: t.nav.proceso, href: "#proceso" },
+    { label: t.nav.sobreMi, href: "#sobre-mi" },
+    { label: t.nav.contacto, href: "#contacto" },
+  ];
+
   return (
     <footer className="footer">
       <div className="footer-cta">
-        <h2>¿Empezamos tu proyecto?</h2>
+        <h2>{t.footer.ctaTitle}</h2>
         <a className="btn btn-primary" href="#contacto">
-          <span className="label">Trabajemos juntos</span>
+          <span className="label">{t.footer.ctaBtn}</span>
           <span className="arrow">→</span>
         </a>
       </div>
@@ -29,12 +34,12 @@ export default function Footer() {
           <span className="logo">
             Nico<span className="dot-gold">.</span>
           </span>
-          <p>Desarrollo web profesional. Diseño y código a medida, con detalles que sorprenden.</p>
+          <p>{t.footer.brandDesc}</p>
         </div>
 
         <nav className="footer-nav">
-          <span className="fn-title">Secciones</span>
-          {SECTIONS.map((s) => (
+          <span className="fn-title">{t.footer.sectionsTitle}</span>
+          {sections.map((s) => (
             <a key={s.href} href={s.href}>
               {s.label}
             </a>
@@ -42,7 +47,7 @@ export default function Footer() {
         </nav>
 
         <nav className="footer-nav">
-          <span className="fn-title">Conectemos</span>
+          <span className="fn-title">{t.footer.connectTitle}</span>
           {SOCIAL.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noreferrer">
               {s.label}
@@ -52,7 +57,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} Nico — Desarrollo web profesional.</span>
+        <span>{t.footer.bottom(new Date().getFullYear())}</span>
       </div>
     </footer>
   );

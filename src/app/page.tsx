@@ -9,12 +9,15 @@ import Footer from "@/components/sections/Footer";
 import ScrollTop from "@/components/ScrollTop";
 import Preloader from "@/components/Preloader";
 import Cursor from "@/components/Cursor";
+import LanguageToggle from "@/components/LanguageToggle";
+import { LanguageProvider } from "@/lib/i18n";
 
 export default function Home() {
   return (
-    <>
+    <LanguageProvider>
       <Preloader />
       <Background />
+      <LanguageToggle />
       <main>
         <Hero />
         <Work />
@@ -26,6 +29,6 @@ export default function Home() {
       <Footer />
       <ScrollTop />
       <Cursor />
-    </>
+    </LanguageProvider>
   );
 }

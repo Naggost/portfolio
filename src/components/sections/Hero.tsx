@@ -2,16 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import { flyToContact } from "@/lib/meteor";
-
-const WORDS = ["a medida.", "que convierten.", "memorables.", "rápidas y seguras."];
+import { useLanguage } from "@/lib/i18n";
 
 export default function Hero() {
+  const { t } = useLanguage();
   const twRef = useRef<HTMLSpanElement>(null);
+  const words = t.hero.words;
 
   // typewriter
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      if (twRef.current) twRef.current.textContent = WORDS[0];
+      if (twRef.current) twRef.current.textContent = words[0];
       return;
     }
     let wi = 0;
@@ -21,7 +22,7 @@ export default function Hero() {
     const type = () => {
       const el = twRef.current;
       if (!el) return;
-      const w = WORDS[wi];
+      const w = words[wi];
       if (!deleting) {
         ci++;
         el.textContent = w.slice(0, ci);
@@ -35,7 +36,7 @@ export default function Hero() {
         el.textContent = w.slice(0, ci);
         if (ci === 0) {
           deleting = false;
-          wi = (wi + 1) % WORDS.length;
+          wi = (wi + 1) % words.length;
           timer = setTimeout(type, 300);
           return;
         }
@@ -44,7 +45,8 @@ export default function Hero() {
     };
     timer = setTimeout(type, 1600);
     return () => clearTimeout(timer);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [words]);
 
   // magnetic buttons
   useEffect(() => {
@@ -76,11 +78,11 @@ export default function Hero() {
     <section className="hero">
       <div className="eyebrow">
         <span className="dot" />
-        Bienvenido a mi Portfolio · Nico
+        {t.hero.eyebrow}
       </div>
       <h1>
         <span className="line reveal-1">
-          <span>Construyo webs</span>
+          <span>{t.hero.line1}</span>
         </span>
         <span className="line reveal-2">
           <span>
@@ -89,13 +91,10 @@ export default function Hero() {
           </span>
         </span>
         <span className="line reveal-3">
-          <span>by Nico.</span>
+          <span>{t.hero.line3}</span>
         </span>
       </h1>
-      <p className="sub">
-        Diseño y desarrollo de webs premium — rápidas, seguras y con detalles únicos que sorprenden
-        a cualquiera.
-      </p>
+      <p className="sub">{t.hero.sub}</p>
       <div className="cta">
         <button
           className="btn btn-primary magnetic"
@@ -108,11 +107,11 @@ export default function Hero() {
               });
           }}
         >
-          <span className="label">Ver proyectos</span>
+          <span className="label">{t.hero.ctaProjects}</span>
           <span className="arrow">→</span>
         </button>
         <button className="btn btn-ghost magnetic" onClick={flyToContact}>
-          <span className="label">Trabajemos juntos</span>
+          <span className="label">{t.hero.ctaContact}</span>
           <span className="arrow">→</span>
         </button>
       </div>

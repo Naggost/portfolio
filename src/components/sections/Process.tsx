@@ -1,34 +1,17 @@
-import type { CSSProperties } from "react";
+"use client";
 
-const STEPS = [
-  {
-    title: "Charlamos",
-    desc: "Me contás tu idea, objetivos y referencias. Entiendo tu negocio y qué necesitás.",
-  },
-  {
-    title: "Diseño",
-    desc: "Creo la propuesta visual: estética, estructura y experiencia. Iteramos hasta que te encante.",
-  },
-  {
-    title: "Desarrollo",
-    desc: "Construyo el sitio con código limpio, rápido y seguro. Te muestro avances en el camino.",
-  },
-  {
-    title: "Entrega",
-    desc: "Lanzamos. Te dejo todo funcionando, optimizado y listo para crecer.",
-  },
-];
+import type { CSSProperties } from "react";
+import { useLanguage } from "@/lib/i18n";
 
 export default function Process() {
+  const { t } = useLanguage();
+
   return (
     <section className="process" id="proceso">
-      <h2>Cómo trabajo</h2>
-      <p className="lead">
-        Un proceso simple y transparente. Pasá el cursor sobre las tarjetas para desplegar los 4
-        pasos.
-      </p>
+      <h2>{t.process.heading}</h2>
+      <p className="lead">{t.process.lead}</p>
       <div className="dcards">
-        {STEPS.map((s, i) => (
+        {t.process.steps.map((s, i) => (
           <div className="dcard" key={i} style={{ "--i": i } as CSSProperties}>
             <span className="dcard-ico">{String(i + 1).padStart(2, "0")}</span>
             <div className="dcard-body">

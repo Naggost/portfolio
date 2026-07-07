@@ -2,38 +2,29 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TECH, techIcon } from "@/lib/tech";
+import { useLanguage, type Dict } from "@/lib/i18n";
 
-type Project = {
-  tag: string;
-  title: string;
-  desc: string;
+type ProjectMeta = {
   accent: string;
   url?: string;
   soon?: boolean;
   tech?: string[];
 };
 
-const PROJECTS: Project[] = [
+type ProjectText = Dict["work"]["projects"][number];
+
+const PROJECTS_META: ProjectMeta[] = [
   {
-    tag: "Inmobiliaria",
-    title: "Veta Inmobiliaria",
-    desc: "Portal de propiedades con búsqueda y panel de administración.",
     accent: "#FF8A1E",
     url: "https://vetainmobiliaria.com",
     tech: ["Next.js", "React", "TypeScript", "Tailwind", "Prisma", "PostgreSQL"],
   },
   {
-    tag: "Periodístico",
-    title: "Aires de Libertad",
-    desc: "Optimización y rediseño de un blog político en WordPress: UX/UI, SEO (Open Graph) y diseño responsive.",
     accent: "#5FA0DC",
     url: "https://airesdelibertadlp.com.ar",
     tech: ["WordPress", "CSS"],
   },
   {
-    tag: "Web app",
-    title: "En desarrollo",
-    desc: "Aplicación a medida con autenticación y dashboard en tiempo real.",
     accent: "#FFB020",
     soon: true,
     tech: ["Next.js", "PostgreSQL", "TypeScript"],
@@ -74,7 +65,17 @@ function Gear({ size, className }: { size: number; className: string }) {
   );
 }
 
-function ProjectCard({ p, index }: { p: Project; index: number }) {
+function ProjectCard({
+  meta,
+  text,
+  index,
+  labels,
+}: {
+  meta: ProjectMeta;
+  text: ProjectText;
+  index: number;
+  labels: Dict["work"];
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const [done, setDone] = useState(false);
@@ -97,9 +98,9 @@ function ProjectCard({ p, index }: { p: Project; index: number }) {
     return () => io.disconnect();
   }, [index]);
 
-  const hasUrl = !!p.url && p.url !== "#";
-  const domain = hasUrl ? domainOf(p.url!) : "tusitio.com";
-  const hasTech = !!p.tech && p.tech.length > 0;
+  const hasUrl = !!meta.url && meta.url !== "#";
+  const domain = hasUrl ? domainOf(meta.url!) : "tusitio.com";
+  const hasTech = !!meta.tech && meta.tech.length > 0;
 
   return (
     <div
@@ -119,12 +120,12 @@ function ProjectCard({ p, index }: { p: Project; index: number }) {
               <span className="b-url">{domain}</span>
             </div>
             {hasUrl ? (
-              <div className="shot" style={{ backgroundImage: `url(${shotUrl(p.url!)})` }} />
+              <div className="shot" style={{ backgroundImage: `url(${shotUrl(meta.url!)})` }} />
             ) : (
               <div
                 className="shot empty"
                 style={{
-                  background: `radial-gradient(120% 120% at 75% 12%, ${p.accent}45, transparent 58%), #15110d`,
+                  background: `radial-gradient(120% 120% at 75% 12%, ${meta.accent}45, transparent 58%), #15110d`,
                 }}
               >
                 <div className="gears">
@@ -140,17 +141,17 @@ function ProjectCard({ p, index }: { p: Project; index: number }) {
       </div>
 
       <div className="card-body">
-        <span className="card-tag2">{p.tag}</span>
-        <h3>{p.title}</h3>
-        <p>{p.desc}</p>
+        <span className="card-tag2">{text.tag}</span>
+        <h3>{text.title}</h3>
+        <p>{text.desc}</p>
 
         <div className="card-foot">
           {hasUrl ? (
-            <a className="card-go" href={p.url} target="_blank" rel="noreferrer">
-              Ver sitio <i>↗</i>
+            <a className="card-go" href={meta.url} target="_blank" rel="noreferrer">
+              {labels.viewSite} <i>↗</i>
             </a>
           ) : (
-            <span className="card-soon-label">Próximamente</span>
+            <span className="card-soon-label">{labels.comingSoon}</span>
           )}
           {hasTech && (
             <button
@@ -159,14 +160,14 @@ function ProjectCard({ p, index }: { p: Project; index: number }) {
               onClick={() => setTechOpen((v) => !v)}
               aria-expanded={techOpen}
             >
-              Tecnologías <i>{techOpen ? "−" : "+"}</i>
+              {labels.tech} <i>{techOpen ? "−" : "+"}</i>
             </button>
           )}
         </div>
 
         {hasTech && (
           <div className={`card-tech ${techOpen ? "open" : ""}`}>
-            {p.tech!.map((t) => {
+            {meta.tech!.map((t) => {
               const tech = TECH[t];
               return (
                 <span
@@ -188,16 +189,15 @@ function ProjectCard({ p, index }: { p: Project; index: number }) {
 }
 
 export default function Work() {
+  const { t } = useLanguage();
+
   return (
     <section className="work" id="trabajos">
-      <h2>Trabajos seleccionados</h2>
-      <p className="lead">
-        Una muestra del tipo de proyectos que construyo. Cada uno pensado de cero: diseño,
-        performance y código mantenible.
-      </p>
+      <h2>{t.work.heading}</h2>
+      <p className="lead">{t.work.lead}</p>
       <div className="cards">
-        {PROJECTS.map((p, i) => (
-          <ProjectCard key={i} p={p} index={i} />
+        {PROJECTS_META.map((meta, i) => (
+          <ProjectCard key={i} meta={meta} text={t.work.projects[i]} index={i} labels={t.work} />
         ))}
       </div>
     </section>

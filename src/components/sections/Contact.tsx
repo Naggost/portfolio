@@ -3,29 +3,25 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { sendLead } from "@/app/actions/contact";
+import { useLanguage } from "@/lib/i18n";
 
 type Data = {
   nombre: string;
   email: string;
   empresa: string;
-  contacto: string;
-  tipo: string;
-  presupuesto: string;
-  plazo: string;
+  contactoIdx: number;
+  tipoIdx: number | null;
+  presupuestoIdx: number;
+  plazoIdx: number;
   mensaje: string;
   consent: boolean;
 };
 
-const CONTACTO = ["Email", "WhatsApp"];
-const TIPOS = ["Landing", "Web institucional", "E-commerce", "Web app", "Otro"];
-const PRESUPUESTO = ["A definir", "Reducido", "Estándar", "Avanzado"];
-const PLAZO = ["Urgente", "1 mes", "2-3 meses", "Flexible"];
-
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-const STEP_TITLES = ["Sobre vos", "Sobre tu proyecto", "Contame un poco más"];
-
 export default function Contact() {
+  const { t } = useLanguage();
+  const c = t.contact;
   const [step, setStep] = useState(0);
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
@@ -35,10 +31,10 @@ export default function Contact() {
     nombre: "",
     email: "",
     empresa: "",
-    contacto: "Email",
-    tipo: "",
-    presupuesto: "A definir",
-    plazo: "Flexible",
+    contactoIdx: 0,
+    tipoIdx: null,
+    presupuestoIdx: 0,
+    plazoIdx: 3,
     mensaje: "",
     consent: false,
   });
@@ -50,11 +46,11 @@ export default function Contact() {
 
   const next = () => {
     if (step === 0 && (!data.nombre.trim() || !EMAIL_RE.test(data.email))) {
-      setErr("Completá tu nombre y un email válido.");
+      setErr(c.errName);
       return;
     }
-    if (step === 1 && !data.tipo) {
-      setErr("Elegí el tipo de proyecto.");
+    if (step === 1 && data.tipoIdx === null) {
+      setErr(c.errTipo);
       return;
     }
     setErr("");
@@ -63,15 +59,26 @@ export default function Contact() {
 
   const submit = async () => {
     if (!data.consent) {
-      setErr("Necesito tu consentimiento para poder contactarte.");
+      setErr(c.errConsent);
       return;
     }
     setErr("");
     setLoading(true);
-    const res = await sendLead({ ...data, website });
+    const res = await sendLead({
+      nombre: data.nombre,
+      email: data.email,
+      empresa: data.empresa,
+      contacto: c.contacto[data.contactoIdx],
+      tipo: data.tipoIdx !== null ? c.tipos[data.tipoIdx] : "",
+      presupuesto: c.presupuesto[data.presupuestoIdx],
+      plazo: c.plazo[data.plazoIdx],
+      mensaje: data.mensaje,
+      consent: data.consent,
+      website,
+    });
     setLoading(false);
     if (res.ok) setSent(true);
-    else setErr(res.error || "No se pudo enviar. Probá de nuevo.");
+    else setErr(res.error || c.errSend);
   };
 
   const spotlight = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -84,26 +91,19 @@ export default function Contact() {
     <section className="contact" id="contacto">
       <div className="contact-grid">
         <div className="contact-pitch">
-          <span className="kicker">Contacto</span>
+          <span className="kicker">{c.kicker}</span>
           <h2>
-            ¿Tenés un proyecto
+            {c.h2a}
             <br />
-            en mente?
+            {c.h2b}
           </h2>
-          <p className="lead">
-            Contame qué necesitás y te respondo en menos de 24-48 hs. Sin compromiso — solo una
-            charla para entender tu proyecto.
-          </p>
+          <p className="lead">{c.lead}</p>
           <ul className="assure">
-            <li>
-              <span className="tick">✓</span> Respondo en 24-48 hs
-            </li>
-            <li>
-              <span className="tick">✓</span> Sin compromiso ni costo inicial
-            </li>
-            <li>
-              <span className="tick">✓</span> Presupuesto claro desde el principio
-            </li>
+            {c.assure.map((a) => (
+              <li key={a}>
+                <span className="tick">✓</span> {a}
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -117,11 +117,8 @@ export default function Contact() {
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               >
                 <span className="ico">✓</span>
-                <h3>¡Gracias, {data.nombre || "crack"}!</h3>
-                <p>
-                  Recibí tu mensaje y te voy a contactar por {data.contacto.toLowerCase()} muy
-                  pronto.
-                </p>
+                <h3>{c.thanks(data.nombre || "crack")}</h3>
+                <p>{c.successBody(c.contacto[data.contactoIdx].toLowerCase())}</p>
               </motion.div>
             ) : (
               <>
@@ -133,47 +130,47 @@ export default function Contact() {
                     exit={{ opacity: 0, x: -24 }}
                     transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <p className="step-count">Paso {step + 1} de 3</p>
-                    <p className="step-title">{STEP_TITLES[step]}</p>
+                    <p className="step-count">{c.stepCount(step + 1)}</p>
+                    <p className="step-title">{c.stepTitles[step]}</p>
 
                     {step === 0 && (
                       <>
                         <div className="field">
-                          <label>Nombre *</label>
+                          <label>{c.nombre}</label>
                           <input
                             value={data.nombre}
                             onChange={(e) => set("nombre", e.target.value)}
-                            placeholder="Tu nombre"
+                            placeholder={c.nombrePh}
                           />
                         </div>
                         <div className="field">
-                          <label>Email *</label>
+                          <label>{c.email}</label>
                           <input
                             type="email"
                             value={data.email}
                             onChange={(e) => set("email", e.target.value)}
-                            placeholder="tu@email.com"
+                            placeholder={c.emailPh}
                           />
                         </div>
                         <div className="field">
-                          <label>Empresa / marca (opcional)</label>
+                          <label>{c.empresa}</label>
                           <input
                             value={data.empresa}
                             onChange={(e) => set("empresa", e.target.value)}
-                            placeholder="Tu negocio"
+                            placeholder={c.empresaPh}
                           />
                         </div>
                         <div className="field">
-                          <label>¿Cómo preferís que te contacte?</label>
+                          <label>{c.preferContact}</label>
                           <div className="chips">
-                            {CONTACTO.map((c) => (
+                            {c.contacto.map((label, i) => (
                               <button
                                 type="button"
-                                key={c}
-                                className={`chip-opt ${data.contacto === c ? "sel" : ""}`}
-                                onClick={() => set("contacto", c)}
+                                key={label}
+                                className={`chip-opt ${data.contactoIdx === i ? "sel" : ""}`}
+                                onClick={() => set("contactoIdx", i)}
                               >
-                                {c}
+                                {label}
                               </button>
                             ))}
                           </div>
@@ -184,46 +181,46 @@ export default function Contact() {
                     {step === 1 && (
                       <>
                         <div className="field">
-                          <label>¿Qué necesitás? *</label>
+                          <label>{c.needQuestion}</label>
                           <div className="chips">
-                            {TIPOS.map((t) => (
+                            {c.tipos.map((label, i) => (
                               <button
                                 type="button"
-                                key={t}
-                                className={`chip-opt ${data.tipo === t ? "sel" : ""}`}
-                                onClick={() => set("tipo", t)}
+                                key={label}
+                                className={`chip-opt ${data.tipoIdx === i ? "sel" : ""}`}
+                                onClick={() => set("tipoIdx", i)}
                               >
-                                {t}
+                                {label}
                               </button>
                             ))}
                           </div>
                         </div>
                         <div className="field">
-                          <label>Presupuesto estimado</label>
+                          <label>{c.presupuestoLabel}</label>
                           <div className="chips">
-                            {PRESUPUESTO.map((p) => (
+                            {c.presupuesto.map((label, i) => (
                               <button
                                 type="button"
-                                key={p}
-                                className={`chip-opt ${data.presupuesto === p ? "sel" : ""}`}
-                                onClick={() => set("presupuesto", p)}
+                                key={label}
+                                className={`chip-opt ${data.presupuestoIdx === i ? "sel" : ""}`}
+                                onClick={() => set("presupuestoIdx", i)}
                               >
-                                {p}
+                                {label}
                               </button>
                             ))}
                           </div>
                         </div>
                         <div className="field">
-                          <label>¿Para cuándo?</label>
+                          <label>{c.plazoLabel}</label>
                           <div className="chips">
-                            {PLAZO.map((p) => (
+                            {c.plazo.map((label, i) => (
                               <button
                                 type="button"
-                                key={p}
-                                className={`chip-opt ${data.plazo === p ? "sel" : ""}`}
-                                onClick={() => set("plazo", p)}
+                                key={label}
+                                className={`chip-opt ${data.plazoIdx === i ? "sel" : ""}`}
+                                onClick={() => set("plazoIdx", i)}
                               >
-                                {p}
+                                {label}
                               </button>
                             ))}
                           </div>
@@ -234,11 +231,11 @@ export default function Contact() {
                     {step === 2 && (
                       <>
                         <div className="field">
-                          <label>Tu mensaje (opcional)</label>
+                          <label>{c.mensajeLabel}</label>
                           <textarea
                             value={data.mensaje}
                             onChange={(e) => set("mensaje", e.target.value)}
-                            placeholder="Contame tu idea, objetivos, referencias que te gusten…"
+                            placeholder={c.mensajePh}
                           />
                         </div>
                         <label className="consent">
@@ -247,9 +244,7 @@ export default function Contact() {
                             checked={data.consent}
                             onChange={(e) => set("consent", e.target.checked)}
                           />
-                          <span>
-                            Acepto que Nico use mis datos para contactarme sobre este proyecto.
-                          </span>
+                          <span>{c.consent}</span>
                         </label>
                       </>
                     )}
@@ -272,19 +267,19 @@ export default function Contact() {
                 <div className="form-nav">
                   {step > 0 ? (
                     <button className="btn btn-ghost" onClick={() => setStep((s) => s - 1)}>
-                      <span className="label">← Atrás</span>
+                      <span className="label">{c.back}</span>
                     </button>
                   ) : (
                     <span />
                   )}
                   {step < 2 ? (
                     <button className="btn btn-primary" onClick={next}>
-                      <span className="label">Siguiente</span>
+                      <span className="label">{c.next}</span>
                       <span className="arrow">→</span>
                     </button>
                   ) : (
                     <button className="btn btn-primary" onClick={submit} disabled={loading}>
-                      <span className="label">{loading ? "Enviando…" : "Enviar solicitud"}</span>
+                      <span className="label">{loading ? c.sending : c.send}</span>
                       {!loading && <span className="arrow">→</span>}
                     </button>
                   )}

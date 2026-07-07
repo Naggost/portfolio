@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { TECH, techIcon } from "@/lib/tech";
+import { useLanguage } from "@/lib/i18n";
 
 const STACK = [
   "Next.js",
@@ -18,6 +19,7 @@ const STACK = [
 ];
 
 export default function About() {
+  const { t } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -44,24 +46,13 @@ export default function About() {
     <section className="about" id="sobre-mi">
       <div className="about-grid" ref={ref}>
         <div className="reveal-up">
-          <span className="label">Sobre mí</span>
-          <p className="statement">
-            Soy <span className="hl">Nico</span>, Desarrollador de Software, obsesionado con el
-            detalle y con que cada proyecto se sienta único.
-          </p>
-          <p>
-            Recibido como Software Developer, no dejé de perfeccionarme — llevado por la curiosidad
-            y las ganas de crear cosas que se vean y funcionen increíble. Combino diseño y código
-            para construir webs rápidas, seguras y con personalidad.
-          </p>
-          <p>
-            Cada proyecto lo encaro de cero: cuido desde la primera animación hasta la última línea
-            de código. Si buscás a alguien que se tome tu web como propia, estás en el lugar
-            correcto.
-          </p>
+          <span className="label">{t.about.label}</span>
+          <p className="statement">{t.about.statement}</p>
+          <p>{t.about.p2}</p>
+          <p>{t.about.p3}</p>
         </div>
         <div className="reveal-up stack-col">
-          <p className="stack-title">Tecnologías que uso</p>
+          <p className="stack-title">{t.about.stackTitle}</p>
           <div className="stack">
             {STACK.map((t) => {
               const tech = TECH[t];
