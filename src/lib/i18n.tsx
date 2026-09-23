@@ -7,7 +7,6 @@ export type Lang = "es" | "en";
 export type Dict = {
   nav: { trabajos: string; servicios: string; proceso: string; sobreMi: string; contacto: string };
   hero: {
-    eyebrow: string;
     line1: string;
     words: string[];
     line3: string;
@@ -90,16 +89,15 @@ const dict: Record<Lang, Dict> = {
       contacto: "Contacto",
     },
     hero: {
-      eyebrow: "Bienvenido a mi Portfolio · Nico",
       line1: "Construyo webs",
       words: ["a medida.", "que convierten.", "memorables.", "rápidas y seguras."],
       line3: "by Nico.",
-      sub: "Diseño y desarrollo de webs premium — rápidas, seguras y con detalles únicos que sorprenden a cualquiera.",
+      sub: "Diseño y desarrollo de webs y sistemas premium — rápidas, seguras y con detalles únicos que sorprenden a cualquiera.",
       ctaProjects: "Ver proyectos",
       ctaContact: "Trabajemos juntos",
     },
     work: {
-      heading: "Trabajos seleccionados",
+      heading: "Mis trabajos",
       lead: "Una muestra del tipo de proyectos que construyo. Cada uno pensado de cero: diseño, performance y código mantenible.",
       viewSite: "Ver sitio",
       tech: "Tecnologías",
@@ -232,16 +230,15 @@ const dict: Record<Lang, Dict> = {
       contacto: "Contact",
     },
     hero: {
-      eyebrow: "Welcome to my Portfolio · Nico",
       line1: "I build websites",
       words: ["that fit you.", "that convert.", "you'll remember.", "fast and secure."],
       line3: "by Nico.",
-      sub: "Premium web design and development — fast, secure, and full of unique details that surprise anyone.",
+      sub: "Premium web and systems design and development — fast, secure, and full of unique details that surprise anyone.",
       ctaProjects: "View projects",
       ctaContact: "Let's work together",
     },
     work: {
-      heading: "Selected work",
+      heading: "My work",
       lead: "A sample of the kind of projects I build. Each one crafted from scratch: design, performance and maintainable code.",
       viewSite: "View site",
       tech: "Tech stack",

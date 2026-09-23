@@ -76,10 +76,6 @@ export default function Hero() {
 
   return (
     <section className="hero">
-      <div className="eyebrow">
-        <span className="dot" />
-        {t.hero.eyebrow}
-      </div>
       <h1>
         <span className="line reveal-1">
           <span>{t.hero.line1}</span>

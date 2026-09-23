@@ -26,7 +26,7 @@ const PROJECTS_META: ProjectMeta[] = [
   },
   {
     accent: "#C1121F",
-    url: "https://mac-automotores.vercel.app",
+    url: "https://mac-automotores.vercel.app/",
     tech: ["Next.js", "React", "TypeScript", "Tailwind", "Motion"],
   },
   {
