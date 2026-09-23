@@ -1,13 +1,13 @@
 <div align="center">
 
-<img src="https://naggost-portfolio.vercel.app/opengraph-image" alt="Portfolio · Nicolás Agostini" width="640" />
+<img src="https://nico-portfolio-lovat.vercel.app/opengraph-image" alt="Portfolio · Nicolás Agostini" width="640" />
 
 # Portfolio · Nicolás Agostini
 
 Mi portfolio como desarrollador de software: reúne los proyectos que construí y es el lugar
 desde donde se puede ver cómo trabajo y contactarme para una próxima web.
 
-[**🌐 Ver en vivo**](https://naggost-portfolio.vercel.app) ·
+[**🌐 Ver en vivo**](https://nico-portfolio-lovat.vercel.app) ·
 [**LinkedIn**](https://www.linkedin.com/in/nicol%C3%A1s-agostini-562335247/) ·
 [**GitHub**](https://github.com/Naggost)
 
@@ -84,6 +84,6 @@ Scripts útiles: `npm run build` (build de producción) · `npm run lint` (ESLin
 <div align="center">
 
 Hecho por **Nicolás Agostini** — Desarrollador de software.
-¿Necesitás una web profesional? [Escribime.](https://naggost-portfolio.vercel.app/#contacto)
+¿Necesitás una web profesional? [Escribime.](https://nico-portfolio-lovat.vercel.app/#contacto)
 
 </div>

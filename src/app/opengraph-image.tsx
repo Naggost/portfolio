@@ -56,7 +56,7 @@ export default function Image() {
 
         {/* footer */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 25 }}>
-          <span style={{ color: "#8C877F" }}>naggost-portfolio.vercel.app</span>
+          <span style={{ color: "#8C877F" }}>nico-portfolio-lovat.vercel.app</span>
           <span style={{ color: "#FFB020" }}>Next.js · React · TypeScript · Three.js</span>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const SITE_URL = "https://naggost-portfolio.vercel.app";
+const SITE_URL = "https://nico-portfolio-lovat.vercel.app";
 const PAGE_TITLE = "Portfolio - Nicolás Agostini";
 const OG_TITLE = "Portfolio · Nicolás Agostini";
 const DESCRIPTION =
