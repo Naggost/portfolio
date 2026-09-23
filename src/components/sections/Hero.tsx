@@ -45,7 +45,6 @@ export default function Hero() {
     };
     timer = setTimeout(type, 1600);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words]);
 
   // magnetic buttons

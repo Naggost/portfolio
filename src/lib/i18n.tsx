@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useSyncExternalStore, type ReactNode } from "react";
 
 export type Lang = "es" | "en";
 
@@ -388,24 +388,49 @@ type Ctx = { lang: Lang; t: Dict; toggle: () => void };
 
 const LanguageContext = createContext<Ctx>({ lang: "es", t: dict.es, toggle: () => {} });
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>("es");
+let current: Lang | null = null;
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    const stored = localStorage.getItem("lang");
-    if (stored === "en" || stored === "es") setLang(stored);
-  }, []);
+const readLang = (): Lang => {
+  if (current === null) {
+    try {
+      current = localStorage.getItem("lang") === "en" ? "en" : "es";
+    } catch {
+      current = "es";
+    }
+  }
+  return current;
+};
+
+const writeLang = (next: Lang) => {
+  current = next;
+  try {
+    localStorage.setItem("lang", next);
+  } catch {}
+  listeners.forEach((notify) => notify());
+};
+
+const subscribeLang = (notify: () => void) => {
+  const onStorage = () => {
+    current = null;
+    notify();
+  };
+  listeners.add(notify);
+  addEventListener("storage", onStorage);
+  return () => {
+    listeners.delete(notify);
+    removeEventListener("storage", onStorage);
+  };
+};
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const lang = useSyncExternalStore(subscribeLang, readLang, (): Lang => "es");
 
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const toggle = () =>
-    setLang((l) => {
-      const next: Lang = l === "es" ? "en" : "es";
-      localStorage.setItem("lang", next);
-      return next;
-    });
+  const toggle = () => writeLang(readLang() === "es" ? "en" : "es");
 
   return (
     <LanguageContext.Provider value={{ lang, t: dict[lang], toggle }}>
