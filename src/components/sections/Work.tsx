@@ -35,6 +35,11 @@ const PROJECTS_META: ProjectMeta[] = [
     tech: ["Next.js", "React", "TypeScript", "Tailwind", "Motion"],
   },
   {
+    accent: "#2E8C85",
+    url: "https://nina-del-norte.vercel.app",
+    tech: ["HTML", "CSS", "JavaScript"],
+  },
+  {
     accent: "#FFB020",
     soon: true,
     tech: ["Next.js", "PostgreSQL", "TypeScript"],

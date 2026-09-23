@@ -13,6 +13,8 @@ export const TECH: Record<string, { slug: string; hex: string }> = {
   Vercel: { slug: "vercel", hex: "#FFFFFF" },
   WordPress: { slug: "wordpress", hex: "#6AA9DC" },
   CSS: { slug: "css3", hex: "#4F9BE0" },
+  HTML: { slug: "html5", hex: "#F06A3F" },
+  JavaScript: { slug: "javascript", hex: "#F7DF1E" },
 };
 
 export function techIcon(slug: string, hex: string) {

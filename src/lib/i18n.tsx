@@ -124,6 +124,11 @@ const dict: Record<Lang, Dict> = {
           desc: "Landing cinematográfica para un centro de medicina estética: hero con video controlado por el scroll, tratamientos, reseñas y pedido de turnos por WhatsApp.",
         },
         {
+          tag: "Gastronomía",
+          title: "Nina del Norte",
+          desc: "Sitio de marca para una fábrica de alfajores artesanales: rueda 3D de sabores, tienda para armar tu caja, premios y sección para mayoristas.",
+        },
+        {
           tag: "Web app",
           title: "En desarrollo",
           desc: "Aplicación a medida con autenticación y dashboard en tiempo real.",
@@ -268,6 +273,11 @@ const dict: Record<Lang, Dict> = {
           tag: "Aesthetic medicine",
           title: "KUPER Medicina Estética",
           desc: "Cinematic landing page for an aesthetic medicine clinic: scroll-controlled video hero, treatments, reviews and appointment requests through WhatsApp.",
+        },
+        {
+          tag: "Food",
+          title: "Nina del Norte",
+          desc: "Brand website for an artisanal alfajor maker: 3D flavor wheel, build-your-own-box store, awards and a wholesale section.",
         },
         {
           tag: "Web app",
