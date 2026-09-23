@@ -162,6 +162,14 @@ body{
 .card-tech.open{max-height:140px;opacity:1;margin-top:14px}
 .tech-chip{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text);border:1px solid;border-radius:100px;padding:5px 11px}
 .tech-chip img{width:14px;height:14px;display:block}
+/* Anillo 3D (desktop): el scroll gira las cards, el hover destaca una y baja el resto */
+.work.work-ring{min-height:0;padding-bottom:0}
+.cg-track{position:relative;margin:4vh -8vw 0;overflow-x:clip}
+.cg-sticky{position:sticky;top:0;height:100vh}
+.cg-stage{position:absolute;inset:0}
+.cg-ring{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.cg-item{position:absolute;left:50%;top:50%;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.cg-item[data-away] .card{animation-play-state:paused}
 
 /* ---------- SERVICES ---------- */
 .services{position:relative;z-index:3;padding:14vh 8vw 16vh}

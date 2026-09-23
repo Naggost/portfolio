@@ -1,8 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { TECH, techIcon } from "@/lib/tech";
 import { useLanguage, type Dict } from "@/lib/i18n";
+import { CircularGallery } from "@/components/ui/circular-gallery";
+
+const RING_QUERY =
+  "(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+
+const subscribeRing = (onChange: () => void) => {
+  const mq = matchMedia(RING_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+};
+
+const useRingMode = () =>
+  useSyncExternalStore(
+    subscribeRing,
+    () => matchMedia(RING_QUERY).matches,
+    () => false,
+  );
 
 type ProjectMeta = {
   accent: string;
@@ -205,16 +222,21 @@ function ProjectCard({
 
 export default function Work() {
   const { t } = useLanguage();
+  const ring = useRingMode();
+
+  const cards = PROJECTS_META.map((meta, i) => (
+    <ProjectCard key={i} meta={meta} text={t.work.projects[i]} index={i} labels={t.work} />
+  ));
 
   return (
-    <section className="work" id="trabajos">
+    <section className={`work${ring ? " work-ring" : ""}`} id="trabajos">
       <h2>{t.work.heading}</h2>
       <p className="lead">{t.work.lead}</p>
-      <div className="cards">
-        {PROJECTS_META.map((meta, i) => (
-          <ProjectCard key={i} meta={meta} text={t.work.projects[i]} index={i} labels={t.work} />
-        ))}
-      </div>
+      {ring ? (
+        <CircularGallery label={t.work.heading}>{cards}</CircularGallery>
+      ) : (
+        <div className="cards">{cards}</div>
+      )}
     </section>
   );
 }
