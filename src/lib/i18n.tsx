@@ -119,6 +119,11 @@ const dict: Record<Lang, Dict> = {
           desc: "Plataforma web para una concesionaria multimarca: catálogo del stock real, simulador de cuotas y contacto directo por WhatsApp en cada unidad.",
         },
         {
+          tag: "Medicina estética",
+          title: "KUPER Medicina Estética",
+          desc: "Landing cinematográfica para un centro de medicina estética: hero con video controlado por el scroll, tratamientos, reseñas y pedido de turnos por WhatsApp.",
+        },
+        {
           tag: "Web app",
           title: "En desarrollo",
           desc: "Aplicación a medida con autenticación y dashboard en tiempo real.",
@@ -258,6 +263,11 @@ const dict: Record<Lang, Dict> = {
           tag: "Dealership",
           title: "MAC Automotores",
           desc: "Web platform for a multi-brand car dealership: real-inventory catalog, financing simulator, and direct WhatsApp contact on every listing.",
+        },
+        {
+          tag: "Aesthetic medicine",
+          title: "KUPER Medicina Estética",
+          desc: "Cinematic landing page for an aesthetic medicine clinic: scroll-controlled video hero, treatments, reviews and appointment requests through WhatsApp.",
         },
         {
           tag: "Web app",

@@ -30,6 +30,11 @@ const PROJECTS_META: ProjectMeta[] = [
     tech: ["Next.js", "React", "TypeScript", "Tailwind", "Motion"],
   },
   {
+    accent: "#C8A165",
+    url: "https://kuper-web.vercel.app",
+    tech: ["Next.js", "React", "TypeScript", "Tailwind", "Motion"],
+  },
+  {
     accent: "#FFB020",
     soon: true,
     tech: ["Next.js", "PostgreSQL", "TypeScript"],
