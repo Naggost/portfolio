@@ -25,6 +25,11 @@ const PROJECTS_META: ProjectMeta[] = [
     tech: ["WordPress", "CSS"],
   },
   {
+    accent: "#C1121F",
+    url: "https://mac-automotores.vercel.app",
+    tech: ["Next.js", "React", "TypeScript", "Tailwind", "Motion"],
+  },
+  {
     accent: "#FFB020",
     soon: true,
     tech: ["Next.js", "PostgreSQL", "TypeScript"],

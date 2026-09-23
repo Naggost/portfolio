@@ -116,6 +116,11 @@ const dict: Record<Lang, Dict> = {
           desc: "Optimización y rediseño de un blog político en WordPress: UX/UI, SEO (Open Graph) y diseño responsive.",
         },
         {
+          tag: "Concesionaria",
+          title: "MAC Automotores",
+          desc: "Plataforma web para una concesionaria multimarca: catálogo del stock real, simulador de cuotas y contacto directo por WhatsApp en cada unidad.",
+        },
+        {
           tag: "Web app",
           title: "En desarrollo",
           desc: "Aplicación a medida con autenticación y dashboard en tiempo real.",
@@ -251,6 +256,11 @@ const dict: Record<Lang, Dict> = {
           tag: "Media",
           title: "Aires de Libertad",
           desc: "Optimization and redesign of a political news blog on WordPress: UX/UI, SEO (Open Graph) and responsive design.",
+        },
+        {
+          tag: "Dealership",
+          title: "MAC Automotores",
+          desc: "Web platform for a multi-brand car dealership: real-inventory catalog, financing simulator, and direct WhatsApp contact on every listing.",
         },
         {
           tag: "Web app",
